@@ -1,0 +1,35 @@
+{
+    "name":        "adrenalinkin/doctrine-naming-strategy",
+    "description": "Custom Doctrine ORM naming strategy",
+    "type":        "library",
+    "license":     "MIT",
+    "keywords":    [
+        "doctrine",
+        "doctrine-naming-strategy",
+        "doctrine-orm"
+    ],
+
+    "authors": [
+        {
+            "email": "adrenalinkin@gmail.com",
+            "name":  "Viktor Linkin",
+            "role":  "Developer"
+        }
+    ],
+
+    "require": {
+        "php":          "~7.1",
+        "doctrine/orm": "~2.3"
+    },
+
+    "suggest": {
+        "symfony/symfony": "Allows more advanced functionality with full Symfony package",
+        "doctrine/doctrine-bundle": "Provides integration Doctrine with Symfony framework"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Linkin\\Component\\DoctrineNamingStrategy\\": ""
+        }
+    }
+}
