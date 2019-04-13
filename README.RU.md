@@ -1,6 +1,9 @@
 Doctrine Naming Strategy [![In English](https://img.shields.io/badge/Switch_To-English-green.svg?style=flat-square)](./README.md)
 ========================
 
+[![Latest Stable Version](https://poser.pugx.org/adrenalinkin/doctrine-naming-strategy/v/stable)](https://packagist.org/packages/adrenalinkin/doctrine-naming-strategy)
+[![Total Downloads](https://poser.pugx.org/adrenalinkin/doctrine-naming-strategy/downloads)](https://packagist.org/packages/adrenalinkin/doctrine-naming-strategy)
+
 Введение
 --------
 

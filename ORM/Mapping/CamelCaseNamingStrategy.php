@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Linkin\Component\DoctrineNamingStrategy\ORM\Mapping;
 
 use Doctrine\ORM\Mapping\DefaultNamingStrategy;
+use function strtolower;
+use function ucfirst;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
