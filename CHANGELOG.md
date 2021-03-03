@@ -1,3 +1,7 @@
+## [Unreleased]
+### Added
+- Support PHP ~8.0.
+
 ## [1.0.1] 2019-04-13
 ### Changed
 - Imported PHP functions into `use` part explicitly.
