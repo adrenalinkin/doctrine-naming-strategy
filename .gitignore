@@ -1,19 +1,5 @@
-### Composer template
-auth.json
+/vendor/
+.php-cs-fixer.cache
 composer.lock
 composer.phar
-/vendor
-
-### IDE settings
-/.settings
-/.buildpath
-/.project
-/.idea
-/nbproject
-
-### servers system
-*.swp
-*.swo
-*.DS_Store
-/*.ini
-*~
+phpunit.xml

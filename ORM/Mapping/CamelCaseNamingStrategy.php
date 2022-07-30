@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Linkin\Component\DoctrineNamingStrategy\ORM\Mapping;
 
 use Doctrine\ORM\Mapping\DefaultNamingStrategy;
-use function strtolower;
-use function ucfirst;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -31,7 +29,7 @@ class CamelCaseNamingStrategy extends DefaultNamingStrategy
         $className = null,
         $embeddedClassName = null
     ): string {
-        return $propertyName . ucfirst($embeddedColumnName);
+        return $propertyName.ucfirst($embeddedColumnName);
     }
 
     /**
@@ -39,7 +37,7 @@ class CamelCaseNamingStrategy extends DefaultNamingStrategy
      */
     public function joinColumnName($propertyName, $className = null): string
     {
-        return $propertyName . ucfirst($this->referenceColumnName());
+        return $propertyName.ucfirst($this->referenceColumnName());
     }
 
     /**
@@ -47,7 +45,7 @@ class CamelCaseNamingStrategy extends DefaultNamingStrategy
      */
     public function joinTableName($sourceEntity, $targetEntity, $propertyName = null): string
     {
-        return strtolower($this->classToTableName($sourceEntity) . ucfirst($this->classToTableName($targetEntity)));
+        return strtolower($this->classToTableName($sourceEntity).ucfirst($this->classToTableName($targetEntity)));
     }
 
     /**
@@ -59,6 +57,6 @@ class CamelCaseNamingStrategy extends DefaultNamingStrategy
             $referencedColumnName = $this->referenceColumnName();
         }
 
-        return $this->classToTableName($entityName) . ucfirst($referencedColumnName);
+        return $this->classToTableName($entityName).ucfirst($referencedColumnName);
     }
 }
