@@ -53,7 +53,7 @@ class CamelCaseNamingStrategy extends DefaultNamingStrategy
     /**
      * {@inheritdoc}
      */
-    public function joinKeyColumnName($entityName, $referencedColumnName = null)
+    public function joinKeyColumnName($entityName, $referencedColumnName = null): string
     {
         if (null === $referencedColumnName) {
             $referencedColumnName = $this->referenceColumnName();
