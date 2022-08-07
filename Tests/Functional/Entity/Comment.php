@@ -24,7 +24,7 @@ class Comment
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="string")
      */
     private $id;
