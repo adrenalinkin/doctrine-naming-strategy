@@ -2,6 +2,10 @@
 ### Added
 - Added codestyle check
 
+## [1.1.1] 2022-07-30
+### Fixed
+- Added string return type to method `joinKeyColumName`.
+
 ## [1.1.0] 2021-03-03
 ### Added
 - Support PHP ~8.0.
