@@ -26,7 +26,7 @@ class CamelCaseNamingStrategyTest extends TestCase
      */
     private $sut;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->sut = new CamelCaseNamingStrategy();
     }
@@ -47,7 +47,6 @@ class CamelCaseNamingStrategyTest extends TestCase
 
     public function testJoinTableName(): void
     {
-
         $result = $this->sut->joinTableName('App\\First', 'App\\Second');
 
         self::assertSame('firstsecond', $result);
