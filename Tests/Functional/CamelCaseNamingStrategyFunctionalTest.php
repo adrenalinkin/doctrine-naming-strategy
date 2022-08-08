@@ -28,7 +28,7 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
         self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
 
         $isSupportedFk = $entityManager->getConnection()->getDatabasePlatform()->supportsForeignKeyConstraints();
-        $expectedSql = $isSupportedFk === true ? $this->getExpectedSqlWithFk() : $this->getExpectedSql();
+        $expectedSql = $isSupportedFk ? $this->getExpectedSqlWithFk() : $this->getExpectedSql();
 
         $schemaTool = new SchemaTool($entityManager);
         $allMetadata = $entityManager->getMetadataFactory()->getAllMetadata();
@@ -38,7 +38,7 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
             self::assertSame(array_shift($expectedSql), $sql);
         }
     }
-    
+
     private function getExpectedSql(): array
     {
         return [

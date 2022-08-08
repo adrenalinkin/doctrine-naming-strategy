@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @author Viktor Linkin <adrenalinkin@gmail.com>
@@ -44,7 +45,7 @@ class DoctrineNamingStrategyWebTestCase extends WebTestCase
         return TestKernel::class;
     }
 
-    protected static function createKernel(array $options = [])
+    protected static function createKernel(array $options = []): KernelInterface
     {
         $class = static::getKernelClass();
 
