@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Linkin\Component\DoctrineNamingStrategy\Tests\Functional;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 
 /**
@@ -22,7 +23,25 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
 {
     public function testApplyCamelCase(): void
     {
-        $expected = [
+        self::createClient();
+        $entityManager = self::getTestContainer()->get('doctrine')->getManager();
+        self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
+
+        $isSupportedFk = $entityManager->getConnection()->getDatabasePlatform()->supportsForeignKeyConstraints();
+        $expectedSql = $isSupportedFk === true ? $this->getExpectedSqlWithFk() : $this->getExpectedSql();
+
+        $schemaTool = new SchemaTool($entityManager);
+        $allMetadata = $entityManager->getMetadataFactory()->getAllMetadata();
+        $sqlList = $schemaTool->getUpdateSchemaSql($allMetadata);
+
+        foreach ($sqlList as $sql) {
+            self::assertSame(array_shift($expectedSql), $sql);
+        }
+    }
+    
+    private function getExpectedSql(): array
+    {
+        return [
             'CREATE TABLE User (id VARCHAR(255) NOT NULL, firstCommentId VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))',
             'CREATE INDEX IDX_2DA179777EB9366D ON User (firstCommentId)',
             'CREATE TABLE userFavoriteComments (UserId VARCHAR(255) NOT NULL, CommentId VARCHAR(255) NOT NULL,'.
@@ -36,15 +55,33 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
             'CREATE TABLE Comment (id VARCHAR(255) NOT NULL, authorId VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))',
             'CREATE INDEX IDX_5BC96BF0A196F9FD ON Comment (authorId)',
         ];
+    }
 
-        self::createClient();
-        $entityManager = self::getTestContainer()->get('doctrine')->getManager();
-        $schemaTool = new SchemaTool($entityManager);
-        $allMetadata = $entityManager->getMetadataFactory()->getAllMetadata();
-        $sqlList = $schemaTool->getUpdateSchemaSql($allMetadata);
-
-        foreach ($sqlList as $sql) {
-            self::assertSame(array_shift($expected), $sql);
-        }
+    private function getExpectedSqlWithFk(): array
+    {
+        return [
+            'CREATE TABLE User (id VARCHAR(255) NOT NULL, firstCommentId VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id),'.
+                ' CONSTRAINT FK_2DA179777EB9366D FOREIGN KEY (firstCommentId) REFERENCES Comment (id)'.
+                ' NOT DEFERRABLE INITIALLY IMMEDIATE)',
+            'CREATE INDEX IDX_2DA179777EB9366D ON User (firstCommentId)',
+            'CREATE TABLE userFavoriteComments (UserId VARCHAR(255) NOT NULL, CommentId VARCHAR(255) NOT NULL,'.
+                ' PRIMARY KEY(UserId, CommentId), CONSTRAINT FK_F7CC4B71631A48FA FOREIGN KEY (UserId)'.
+                ' REFERENCES User (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE,'.
+                ' CONSTRAINT FK_F7CC4B71E4614156 FOREIGN KEY (CommentId) REFERENCES Comment (id)'.
+                ' ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE)',
+            'CREATE INDEX IDX_F7CC4B71631A48FA ON userFavoriteComments (UserId)',
+            'CREATE INDEX IDX_F7CC4B71E4614156 ON userFavoriteComments (CommentId)',
+            'CREATE TABLE userReadComments (UserId VARCHAR(255) NOT NULL, CommentId VARCHAR(255) NOT NULL,'.
+                ' PRIMARY KEY(UserId, CommentId), CONSTRAINT FK_81D0D71E631A48FA FOREIGN KEY (UserId)'.
+                ' REFERENCES User (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE,'.
+                ' CONSTRAINT FK_81D0D71EE4614156 FOREIGN KEY (CommentId) REFERENCES Comment (id)'.
+                ' ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE)',
+            'CREATE INDEX IDX_81D0D71E631A48FA ON userReadComments (UserId)',
+            'CREATE INDEX IDX_81D0D71EE4614156 ON userReadComments (CommentId)',
+            'CREATE TABLE Comment (id VARCHAR(255) NOT NULL, authorId VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id),'.
+                ' CONSTRAINT FK_5BC96BF0A196F9FD FOREIGN KEY (authorId) REFERENCES User (id)'.
+                ' NOT DEFERRABLE INITIALLY IMMEDIATE)',
+            'CREATE INDEX IDX_5BC96BF0A196F9FD ON Comment (authorId)',
+        ];
     }
 }
