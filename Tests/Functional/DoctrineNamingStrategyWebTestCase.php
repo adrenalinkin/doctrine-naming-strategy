@@ -24,6 +24,13 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class DoctrineNamingStrategyWebTestCase extends WebTestCase
 {
+    /**
+     * For compatibility with different Symfony versions.
+     *
+     * @var ContainerInterface
+     */
+    protected static $container;
+
     protected function tearDown(): void
     {
         parent::tearDown();
