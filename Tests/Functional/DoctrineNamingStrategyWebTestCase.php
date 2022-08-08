@@ -33,6 +33,10 @@ class DoctrineNamingStrategyWebTestCase extends WebTestCase
 
     protected static function getTestContainer(): ContainerInterface
     {
+        if (Kernel::VERSION_ID >= 60000) {
+            return self::getContainer();
+        }
+
         if (Kernel::VERSION_ID >= 40100) {
             return self::$container;
         }
