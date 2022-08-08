@@ -1,35 +1,44 @@
 {
-    "name":        "adrenalinkin/doctrine-naming-strategy",
-    "description": "Custom Doctrine ORM naming strategy",
-    "type":        "library",
-    "license":     "MIT",
-    "keywords":    [
+    "name": "adrenalinkin/doctrine-naming-strategy",
+    "description": "Camel Case Doctrine ORM naming strategy",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
         "doctrine",
         "doctrine-naming-strategy",
-        "doctrine-orm"
+        "doctrine-orm",
+        "camel-case"
     ],
-
     "authors": [
         {
-            "email": "adrenalinkin@gmail.com",
-            "name":  "Viktor Linkin",
-            "role":  "Developer"
+            "name": "Viktor Linkin",
+            "email": "adrenalinkin@gmail.com"
         }
     ],
-
     "require": {
-        "php":          "~7.1||~8.0",
-        "doctrine/orm": "~2.3"
+        "php": "^7.1 || ^8.0",
+        "doctrine/orm": "^2.3"
     },
-
-    "suggest": {
-        "symfony/symfony": "Allows more advanced functionality with full Symfony package",
-        "doctrine/doctrine-bundle": "Provides integration Doctrine with Symfony framework"
+    "require-dev": {
+        "doctrine/doctrine-bundle": "^1.6 || ^2.0",
+        "phpunit/phpunit": "^5.7 || ^6.0 || ^7.0 || ^8.0 || ^9.0",
+        "symfony/browser-kit": "^3.4 || ^4.0 || ^5.0",
+        "symfony/framework-bundle": "^3.4 || ^4.0 || ^5.0 || ^6.0"
     },
-
     "autoload": {
         "psr-4": {
             "Linkin\\Component\\DoctrineNamingStrategy\\": ""
+        },
+        "exclude-from-classmap": [
+            "Tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Linkin\\Component\\DoctrineNamingStrategy\\Tests\\": "Tests/"
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }

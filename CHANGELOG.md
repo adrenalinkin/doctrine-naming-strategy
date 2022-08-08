@@ -1,3 +1,7 @@
+## [Unreleased]
+### Added
+- Added codestyle check
+
 ## [1.1.1] 2022-07-30
 ### Fixed
 - Added string return type to method `joinKeyColumName`.
