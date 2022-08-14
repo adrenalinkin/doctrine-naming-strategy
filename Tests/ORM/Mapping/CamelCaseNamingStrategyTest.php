@@ -49,17 +49,17 @@ class CamelCaseNamingStrategyTest extends TestCase
     {
         $result = $this->sut->joinTableName('App\\First', 'App\\Second');
 
-        self::assertSame('firstsecond', $result);
+        self::assertSame('FirstSecond', $result);
     }
 
     public function testJoinKeyColumnName(): void
     {
         $result = $this->sut->joinKeyColumnName('App\\First');
 
-        self::assertSame('FirstId', $result);
+        self::assertSame('firstId', $result);
 
         $result = $this->sut->joinKeyColumnName('App\\First', 'referenceId');
 
-        self::assertSame('FirstReferenceId', $result);
+        self::assertSame('firstReferenceId', $result);
     }
 }

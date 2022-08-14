@@ -31,15 +31,9 @@ class TestKernel extends Kernel
      */
     private $varDir;
 
-    /**
-     * @var bool|null
-     */
-    private $legacyMode;
-
-    public function __construct(string $varDir, string $environment, bool $debug, ?bool $legacyMode)
+    public function __construct(string $varDir, string $environment, bool $debug)
     {
         $this->varDir = $varDir;
-        $this->legacyMode = $legacyMode;
 
         parent::__construct($environment, $debug);
     }
@@ -76,11 +70,7 @@ class TestKernel extends Kernel
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->register('logger', NullLogger::class);
-            $definition = $container->register(CamelCaseNamingStrategy::class, CamelCaseNamingStrategy::class);
-
-            if (null !== $this->legacyMode) {
-                $definition->addArgument($this->legacyMode);
-            }
+            $container->register(CamelCaseNamingStrategy::class, CamelCaseNamingStrategy::class);
 
             $container->loadFromExtension('framework', [
                 'secret' => 'test',
