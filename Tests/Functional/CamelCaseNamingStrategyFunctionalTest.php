@@ -21,14 +21,17 @@ use Doctrine\ORM\Tools\SchemaTool;
  */
 class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTestCase
 {
-    public function testApplyCamelCase(): void
+    /**
+     * @dataProvider applyCamelCaseDataProvider
+     */
+    public function testApplyCamelCase(?bool $legacyMode): void
     {
-        self::createClient();
+        self::createClient(['legacyMode' => $legacyMode]);
         $entityManager = self::getTestContainer()->get('doctrine')->getManager();
         self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
 
         $isSupportedFk = $entityManager->getConnection()->getDatabasePlatform()->supportsForeignKeyConstraints();
-        $expectedSql = $isSupportedFk ? $this->getExpectedSqlWithFk() : $this->getExpectedSql();
+        $expectedSql = $this->getExpectedSql($isSupportedFk, $legacyMode);
 
         $schemaTool = new SchemaTool($entityManager);
         $allMetadata = $entityManager->getMetadataFactory()->getAllMetadata();
@@ -39,49 +42,41 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
         }
     }
 
-    private function getExpectedSql(): array
+    public function applyCamelCaseDataProvider(): array
     {
         return [
-            'CREATE TABLE User (id VARCHAR(255) NOT NULL, firstCommentId VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))',
-            'CREATE INDEX IDX_2DA179777EB9366D ON User (firstCommentId)',
-            'CREATE TABLE userFavoriteComments (UserId VARCHAR(255) NOT NULL, CommentId VARCHAR(255) NOT NULL,'.
-                ' PRIMARY KEY(UserId, CommentId))',
-            'CREATE INDEX IDX_F7CC4B71631A48FA ON userFavoriteComments (UserId)',
-            'CREATE INDEX IDX_F7CC4B71E4614156 ON userFavoriteComments (CommentId)',
-            'CREATE TABLE userReadComments (UserId VARCHAR(255) NOT NULL, CommentId VARCHAR(255) NOT NULL,'.
-                ' PRIMARY KEY(UserId, CommentId))',
-            'CREATE INDEX IDX_81D0D71E631A48FA ON userReadComments (UserId)',
-            'CREATE INDEX IDX_81D0D71EE4614156 ON userReadComments (CommentId)',
-            'CREATE TABLE Comment (id VARCHAR(255) NOT NULL, authorId VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))',
-            'CREATE INDEX IDX_5BC96BF0A196F9FD ON Comment (authorId)',
+            ['legacyMode' => null],
+            ['legacyMode' => true],
+            ['legacyMode' => false],
         ];
     }
 
-    private function getExpectedSqlWithFk(): array
+    private function getExpectedSql(bool $isSupportedFK, ?bool $legacyMode): array
     {
-        return [
-            'CREATE TABLE User (id VARCHAR(255) NOT NULL, firstCommentId VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id),'.
-                ' CONSTRAINT FK_2DA179777EB9366D FOREIGN KEY (firstCommentId) REFERENCES Comment (id)'.
-                ' NOT DEFERRABLE INITIALLY IMMEDIATE)',
-            'CREATE INDEX IDX_2DA179777EB9366D ON User (firstCommentId)',
-            'CREATE TABLE userFavoriteComments (UserId VARCHAR(255) NOT NULL, CommentId VARCHAR(255) NOT NULL,'.
-                ' PRIMARY KEY(UserId, CommentId), CONSTRAINT FK_F7CC4B71631A48FA FOREIGN KEY (UserId)'.
-                ' REFERENCES User (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE,'.
-                ' CONSTRAINT FK_F7CC4B71E4614156 FOREIGN KEY (CommentId) REFERENCES Comment (id)'.
-                ' ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE)',
-            'CREATE INDEX IDX_F7CC4B71631A48FA ON userFavoriteComments (UserId)',
-            'CREATE INDEX IDX_F7CC4B71E4614156 ON userFavoriteComments (CommentId)',
-            'CREATE TABLE userReadComments (UserId VARCHAR(255) NOT NULL, CommentId VARCHAR(255) NOT NULL,'.
-                ' PRIMARY KEY(UserId, CommentId), CONSTRAINT FK_81D0D71E631A48FA FOREIGN KEY (UserId)'.
-                ' REFERENCES User (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE,'.
-                ' CONSTRAINT FK_81D0D71EE4614156 FOREIGN KEY (CommentId) REFERENCES Comment (id)'.
-                ' ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE)',
-            'CREATE INDEX IDX_81D0D71E631A48FA ON userReadComments (UserId)',
-            'CREATE INDEX IDX_81D0D71EE4614156 ON userReadComments (CommentId)',
-            'CREATE TABLE Comment (id VARCHAR(255) NOT NULL, authorId VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id),'.
-                ' CONSTRAINT FK_5BC96BF0A196F9FD FOREIGN KEY (authorId) REFERENCES User (id)'.
-                ' NOT DEFERRABLE INITIALLY IMMEDIATE)',
-            'CREATE INDEX IDX_5BC96BF0A196F9FD ON Comment (authorId)',
-        ];
+        if (true === $legacyMode || null === $legacyMode) {
+            $path = $isSupportedFK
+                ? __DIR__.'/Sql/camelCaseNamingStrategyLegacyWithFk.sql'
+                : __DIR__.'/Sql/camelCaseNamingStrategyLegacyNoFk.sql'
+            ;
+
+            return $this->convertSqlToArray(file_get_contents($path));
+        }
+
+        $path = $isSupportedFK
+            ? __DIR__.'/Sql/camelCaseNamingStrategyWithFk.sql'
+            : __DIR__.'/Sql/camelCaseNamingStrategyNoFk.sql'
+        ;
+
+        return $this->convertSqlToArray(file_get_contents($path));
+    }
+
+    private function convertSqlToArray(string $sql): array
+    {
+        $sql = preg_replace('/\n/', '', $sql);
+        $sql = preg_replace('/\s+/', ' ', $sql);
+        $sql = preg_replace('/ \( /', ' (', $sql);
+        $sql = preg_replace('/ \);/', ');', $sql);
+
+        return (array) explode(';', $sql);
     }
 }

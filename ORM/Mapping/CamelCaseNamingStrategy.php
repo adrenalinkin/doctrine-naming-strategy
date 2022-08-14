@@ -21,6 +21,28 @@ use Doctrine\ORM\Mapping\DefaultNamingStrategy;
 class CamelCaseNamingStrategy extends DefaultNamingStrategy
 {
     /**
+     * @var bool
+     */
+    private $legacyMode;
+
+    /**
+     * @param bool $legacyMode @deprecated will be removed in 2.0.0
+     */
+    public function __construct(bool $legacyMode = true)
+    {
+        if (true === $legacyMode) {
+            trigger_deprecation(
+                'adrenalinkin/doctrine-naming-strategy',
+                '1.2.0',
+                'The "$legacyMode" argument is deprecated, use "new %s()" instead.',
+                static::class
+            );
+        }
+
+        $this->legacyMode = $legacyMode;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function embeddedFieldToColumnName(
@@ -45,7 +67,13 @@ class CamelCaseNamingStrategy extends DefaultNamingStrategy
      */
     public function joinTableName($sourceEntity, $targetEntity, $propertyName = null): string
     {
-        return strtolower($this->classToTableName($sourceEntity).ucfirst($this->classToTableName($targetEntity)));
+        $joinTableName = $this->classToTableName($sourceEntity).ucfirst($this->classToTableName($targetEntity));
+
+        if ($this->legacyMode) {
+            return strtolower($joinTableName);
+        }
+
+        return $joinTableName;
     }
 
     /**
@@ -57,6 +85,12 @@ class CamelCaseNamingStrategy extends DefaultNamingStrategy
             $referencedColumnName = $this->referenceColumnName();
         }
 
-        return $this->classToTableName($entityName).ucfirst($referencedColumnName);
+        $joinKeyColumnName = $this->classToTableName($entityName).ucfirst($referencedColumnName);
+
+        if ($this->legacyMode) {
+            return $joinKeyColumnName;
+        }
+
+        return lcfirst($joinKeyColumnName);
     }
 }
