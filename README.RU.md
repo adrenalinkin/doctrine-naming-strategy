@@ -48,15 +48,6 @@ doctrine:
         naming_strategy: Linkin\Component\DoctrineNamingStrategy\ORM\Mapping\CamelCaseNamingStrategy
 ```
 
-#### Как активировать обновленную стратегию?
-```yaml
-services:
-    Linkin\Component\DoctrineNamingStrategy\ORM\Mapping\CamelCaseNamingStrategy:
-        class: Linkin\Component\DoctrineNamingStrategy\ORM\Mapping\CamelCaseNamingStrategy
-        arguments:
-            - false # Отключаем Legacy Mode
-```
-
 Как будет выглядеть SQL?
 ------------------------
 
@@ -64,35 +55,12 @@ services:
 [пример ассоциаций сущностей](https://www.doctrine-project.org/projects/doctrine-orm/en/2.12/reference/working-with-associations.html#association-example-entities)
 из официальной документации Doctrine
 
-### Сравнение SQL для разных стратегий
-<details><summary>ПО УМОЛЧАНИЮ: Устаревший CamelCaseNamingStrategy к DefaultNamingStrategy </summary>
-<p>
-
-![Compare](https://user-images.githubusercontent.com/4967813/184545111-dbdf179a-828d-4427-91c6-277593ed070f.png)
-
-</p>
-</details>
-
-<details><summary>Устаревший CamelCaseNamingStrategy к новому CamelCaseNamingStrategy </summary>
-<p>
-
-![Compare](https://user-images.githubusercontent.com/4967813/184545155-a523dfb7-ac8b-45d2-9514-28cebf79a203.png)
-
-</p>
-</details>
-
-<details><summary>DefaultNamingStrategy к новому CamelCaseNamingStrategy </summary>
-<p>
-
+### Сравнение DefaultNamingStrategy и CamelCaseNamingStrategy
 ![Compare](https://user-images.githubusercontent.com/4967813/184545148-8f07cb13-5a84-4470-a84f-6bb70626fee1.png)
 
-</p>
-</details>
-
-#### Сарой SQL для всех стратегий
+#### Сырой SQL для разных стратегий
 - [DefaultNamingStrategy](./Tests/Functional/Sql/defaultNamingStrategyWithFk.sql)
-- [CamelCaseNamingStrategy](./Tests/Functional/Sql/camelCaseNamingStrategyLegacyWithFk.sql)
-- [CamelCaseNamingStrategy - Legacy](./Tests/Functional/Sql/camelCaseNamingStrategyLegacyWithFk.sql)
+- [CamelCaseNamingStrategy](./Tests/Functional/Sql/camelCaseNamingStrategyWithFk.sql)
 
 Лицензия
 --------

@@ -21,17 +21,14 @@ use Doctrine\ORM\Tools\SchemaTool;
  */
 class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTestCase
 {
-    /**
-     * @dataProvider applyCamelCaseDataProvider
-     */
-    public function testApplyCamelCase(?bool $legacyMode): void
+    public function testApplyCamelCase(): void
     {
-        self::createClient(['legacyMode' => $legacyMode]);
+        self::createClient();
         $entityManager = self::getTestContainer()->get('doctrine')->getManager();
         self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
 
         $isSupportedFk = $entityManager->getConnection()->getDatabasePlatform()->supportsForeignKeyConstraints();
-        $expectedSql = $this->getExpectedSql($isSupportedFk, $legacyMode);
+        $expectedSql = $this->getExpectedSql($isSupportedFk);
 
         $schemaTool = new SchemaTool($entityManager);
         $allMetadata = $entityManager->getMetadataFactory()->getAllMetadata();
@@ -42,26 +39,8 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
         }
     }
 
-    public function applyCamelCaseDataProvider(): array
+    private function getExpectedSql(bool $isSupportedFK): array
     {
-        return [
-            ['legacyMode' => null],
-            ['legacyMode' => true],
-            ['legacyMode' => false],
-        ];
-    }
-
-    private function getExpectedSql(bool $isSupportedFK, ?bool $legacyMode): array
-    {
-        if (true === $legacyMode || null === $legacyMode) {
-            $path = $isSupportedFK
-                ? __DIR__.'/Sql/camelCaseNamingStrategyLegacyWithFk.sql'
-                : __DIR__.'/Sql/camelCaseNamingStrategyLegacyNoFk.sql'
-            ;
-
-            return $this->convertSqlToArray(file_get_contents($path));
-        }
-
         $path = $isSupportedFK
             ? __DIR__.'/Sql/camelCaseNamingStrategyWithFk.sql'
             : __DIR__.'/Sql/camelCaseNamingStrategyNoFk.sql'

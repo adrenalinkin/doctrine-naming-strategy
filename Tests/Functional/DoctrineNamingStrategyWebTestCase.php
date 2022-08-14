@@ -63,8 +63,7 @@ class DoctrineNamingStrategyWebTestCase extends WebTestCase
         return new $class(
             self::varDir(),
             $options['environment'] ?? 'test',
-            $options['debug'] ?? true,
-            $options['legacyMode'] ?? null
+            $options['debug'] ?? true
         );
     }
 
