@@ -1,3 +1,7 @@
+## [2.0.0] - 2022-08-15
+### Removed
+- Removed legacy mode (#11)
+
 ## [1.2.0] - 2022-08-15
 ### Added
 - Add tests and code style (#5)
