@@ -60,7 +60,12 @@ class DoctrineNamingStrategyWebTestCase extends WebTestCase
     {
         $class = static::getKernelClass();
 
-        return new $class(self::varDir(), $options['environment'] ?? 'test', $options['debug'] ?? true);
+        return new $class(
+            self::varDir(),
+            $options['environment'] ?? 'test',
+            $options['debug'] ?? true,
+            $options['legacyMode'] ?? null
+        );
     }
 
     private static function varDir(): string
