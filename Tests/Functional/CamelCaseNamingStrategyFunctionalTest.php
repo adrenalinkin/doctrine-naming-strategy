@@ -42,11 +42,13 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
         }
     }
 
-    public function applyCamelCaseDataProvider(): iterable
+    public function applyCamelCaseDataProvider(): array
     {
-        yield ['legacyMode' => null];
-        yield ['legacyMode' => true];
-        yield ['legacyMode' => false];
+        return [
+            ['legacyMode' => null],
+            ['legacyMode' => true],
+            ['legacyMode' => false],
+        ];
     }
 
     private function getExpectedSql(bool $isSupportedFK, ?bool $legacyMode): array
