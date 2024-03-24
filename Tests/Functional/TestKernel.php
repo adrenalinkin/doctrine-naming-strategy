@@ -87,7 +87,7 @@ class TestKernel extends Kernel
                     'naming_strategy' => CamelCaseNamingStrategy::class,
                     'mappings' => [
                         'TestEntity' => [
-                            'type' => 'attribute',
+                            'type' => \PHP_VERSION_ID >= 80000 ? 'attribute' : 'annotation',
                             'is_bundle' => false,
                             'dir' => __DIR__.'/Entity',
                             'prefix' => 'Linkin\Component\DoctrineNamingStrategy\Tests\Functional\Entity',

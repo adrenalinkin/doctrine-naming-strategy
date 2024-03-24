@@ -27,7 +27,14 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
         $entityManager = self::getTestContainer()->get('doctrine')->getManager();
         self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
 
-        $expectedSql = $this->getExpectedSql(true);
+        $platform = $entityManager->getConnection()->getDatabasePlatform();
+        $isSupportedFk = true;
+
+        if (method_exists($platform, 'supportsForeignKeyConstraints')) {
+            $isSupportedFk = $platform->supportsForeignKeyConstraints();
+        }
+
+        $expectedSql = $this->getExpectedSql($isSupportedFk);
 
         $schemaTool = new SchemaTool($entityManager);
         $allMetadata = $entityManager->getMetadataFactory()->getAllMetadata();
