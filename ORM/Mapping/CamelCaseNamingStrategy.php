@@ -20,9 +20,6 @@ use Doctrine\ORM\Mapping\DefaultNamingStrategy;
  */
 class CamelCaseNamingStrategy extends DefaultNamingStrategy
 {
-    /**
-     * {@inheritdoc}
-     */
     public function embeddedFieldToColumnName(
         $propertyName,
         $embeddedColumnName,
@@ -32,25 +29,16 @@ class CamelCaseNamingStrategy extends DefaultNamingStrategy
         return $propertyName.ucfirst($embeddedColumnName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function joinColumnName($propertyName, $className = null): string
     {
         return $propertyName.ucfirst($this->referenceColumnName());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function joinTableName($sourceEntity, $targetEntity, $propertyName = null): string
     {
         return $this->classToTableName($sourceEntity).ucfirst($this->classToTableName($targetEntity));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function joinKeyColumnName($entityName, $referencedColumnName = null): string
     {
         if (null === $referencedColumnName) {

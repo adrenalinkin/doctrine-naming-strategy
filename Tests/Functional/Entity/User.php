@@ -24,7 +24,9 @@ class User
 {
     /**
      * @ORM\Id()
+     *
      * @ORM\GeneratedValue(strategy="NONE")
+     *
      * @ORM\Column(type="string")
      */
     private $id;
@@ -33,6 +35,7 @@ class User
      * Bidirectional - Many users have Many favorite comments (OWNING SIDE).
      *
      * @ORM\ManyToMany(targetEntity="Comment", inversedBy="userFavorites")
+     *
      * @ORM\JoinTable(name="UserFavoriteComments")
      */
     private $favorites;
@@ -41,6 +44,7 @@ class User
      * Unidirectional - Many users have marked many comments as read.
      *
      * @ORM\ManyToMany(targetEntity="Comment")
+     *
      * @ORM\JoinTable(name="UserReadComments")
      */
     private $commentsRead;
