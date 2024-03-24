@@ -44,10 +44,6 @@ class DoctrineNamingStrategyWebTestCase extends WebTestCase
             return self::getContainer();
         }
 
-        if (Kernel::VERSION_ID >= 40100) {
-            return self::$container;
-        }
-
         return self::$kernel->getContainer();
     }
 
