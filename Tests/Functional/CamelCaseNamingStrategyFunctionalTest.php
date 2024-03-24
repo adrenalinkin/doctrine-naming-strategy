@@ -27,7 +27,7 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
         $entityManager = self::getTestContainer()->get('doctrine')->getManager();
         self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
 
-        $expectedSql = $this->getExpectedSql(true);
+        $expectedSql = $this->convertSqlToArray(file_get_contents(__DIR__.'/Sql/camelCaseNamingStrategyWithFk.sql'));
 
         $schemaTool = new SchemaTool($entityManager);
         $allMetadata = $entityManager->getMetadataFactory()->getAllMetadata();
@@ -38,16 +38,6 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
         }
     }
 
-    private function getExpectedSql(bool $isSupportedFK): array
-    {
-        $path = $isSupportedFK
-            ? __DIR__.'/Sql/camelCaseNamingStrategyWithFk.sql'
-            : __DIR__.'/Sql/camelCaseNamingStrategyNoFk.sql'
-        ;
-
-        return $this->convertSqlToArray(file_get_contents($path));
-    }
-
     private function convertSqlToArray(string $sql): array
     {
         $sql = preg_replace('/\n/', '', $sql);
@@ -55,6 +45,6 @@ class CamelCaseNamingStrategyFunctionalTest extends DoctrineNamingStrategyWebTes
         $sql = preg_replace('/ \( /', ' (', $sql);
         $sql = preg_replace('/ \);/', ');', $sql);
 
-        return (array) explode(';', $sql);
+        return explode(';', $sql);
     }
 }
