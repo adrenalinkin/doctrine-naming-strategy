@@ -1,3 +1,9 @@
+## [3.0.0] - 2024-03-24
+### Added
+- Added compatibility with doctrine/orm 3.x (#13)
+### Removed
+- Preparing to new release with doctrine/orm 3.x and PHP 8.x only (#15)
+
 ## [2.0.0] - 2022-08-15
 ### Removed
 - Removed legacy mode (#11)
